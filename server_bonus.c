@@ -1,39 +1,41 @@
 #include "minitalk_bonus.h"
+#include <stdio.h>
 
 void    handler(int signal, siginfo_t *info, void *context)
 {
-    static unsigned char    c;
-    static int              i;
+    static t_server_overall server_overall;
 
     (void)context;
-    c = 0;
-    if (signal == SIGUSR1)
-        c |= 1 << 1;
-    if(signal == SIGUSR2)
-        c |= 1 << 0;
-    i++;
-    kill(info->si_pid, SIGUSR1);
-    if (i == 8)
+    if (info->si_signo != 0)
+        server_overall.pid = info->si_signo;
+    if (signal == SIGUSR2)
+        server_overall.c |= 1 << 1;
+    if(server_overall.i < 7)
+        server_overall.c >>= 1;
+    server_overall.i++;
+    if (server_overall.i > 7)
     {
-        ft_printf("%c", c);
-        i = 0;
-        c = 0;
-    }        
+        printf("%c", server_overall.c);
+        server_overall.i = 0;
+        server_overall.c = 0;
+    }
+    if (kill(info->si_pid, SIGUSR1) == -1)
+        printf("%s\n", "kill error, signal cannot be sent");
 }
 
 int main(int ac, char **av)
 {
     struct sigaction	sig;
     if (ac != 1)
-        ft_printf("%s\n", "too many arguments");
+        printf("%s\n", "too many arguments");
     (void)av;
-    ft_printf("pid: %d\n", getpid());
+    printf("pid: %d\n", getpid());
     sig.sa_sigaction = handler;
     sig.sa_flags = SA_SIGINFO;
     if (sigaction(SIGUSR1, &sig, NULL) == -1)
-        ft_printf("%s\n", "sigaction error");
+        printf("%s\n", "sigaction error");
     if (sigaction(SIGUSR2, &sig, NULL) == -1)
-        ft_printf("%s\n", "sigaction error");
+        printf("%s\n", "sigaction error");
     while (1)
         pause();
 }

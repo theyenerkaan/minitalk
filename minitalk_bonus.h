@@ -4,7 +4,21 @@
 
 # include <signal.h>
 # include <stdlib.h>
-# include "ft_printf/ft_printf.h"
+
+typedef struct s_overall_client
+{
+	struct sigaction	sa;
+	pid_t				pid;
+	char			    *str;
+	int					i;
+}	t_client_overall;
+
+typedef struct s_overall_server
+{
+	unsigned char	c;
+	int				i;
+	pid_t			pid;
+}	t_server_overall;
 
 int	ft_atoi(const char *str);
 
