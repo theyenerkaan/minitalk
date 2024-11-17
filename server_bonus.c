@@ -5,10 +5,10 @@ void    handler(int signal, siginfo_t *info, void *context)
     static t_server_overall server_overall;
 
     (void)context;
-    if (info->si_signo != 0)
-        server_overall.pid = info->si_signo;
+    if (info->si_pid != 0)
+        server_overall.pid = info->si_pid;
     if (signal == SIGUSR2)
-        server_overall.c |= 1 << 1;
+        server_overall.c |= 1 << 7;
     if(server_overall.i < 7)
         server_overall.c >>= 1;
     server_overall.i++;

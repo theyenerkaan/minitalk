@@ -19,8 +19,18 @@ void	context_sender(int serversig, siginfo_t *info, void *context)
 	tmp = (*(client_overall.str) & 1);
 	*(client_overall.str) >>= 1;
 	client_overall.i++;
-	if (kill(client_overall.pid, tmp + SIGUSR1) == -1)
-		ft_printf("%s\n", "kill error, signal cannot be sent");
+	if(tmp == 1)
+	{
+		if (kill(client_overall.pid, SIGUSR2) == -1)
+			ft_printf("%s\n", "kill error, signal cannot be sent");
+	}
+	else
+	{
+		if (kill(client_overall.pid, SIGUSR1) == -1)
+			ft_printf("%s\n", "kill error, signal cannot be sent");
+	}
+	// if (kill(client_overall.pid, tmp + SIGUSR1) == -1)
+	// 	ft_printf("%s\n", "kill error, signal cannot be sent");
 }
 
 int	main(int ac, char **av)
