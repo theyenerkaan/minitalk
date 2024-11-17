@@ -1,5 +1,4 @@
 #include "minitalk_bonus.h"
-#include <stdio.h>
 
 void    handler(int signal, siginfo_t *info, void *context)
 {
@@ -15,27 +14,27 @@ void    handler(int signal, siginfo_t *info, void *context)
     server_overall.i++;
     if (server_overall.i > 7)
     {
-        printf("%c", server_overall.c);
+        ft_printf("%c", server_overall.c);
         server_overall.i = 0;
         server_overall.c = 0;
     }
     if (kill(info->si_pid, SIGUSR1) == -1)
-        printf("%s\n", "kill error, signal cannot be sent");
+        ft_printf("%s\n", "kill error, signal cannot be sent");
 }
 
 int main(int ac, char **av)
 {
     struct sigaction	sig;
     if (ac != 1)
-        printf("%s\n", "too many arguments");
+        ft_printf("%s\n", "too many arguments");
     (void)av;
-    printf("pid: %d\n", getpid());
+    ft_printf("pid: %d\n", getpid());
     sig.sa_sigaction = handler;
     sig.sa_flags = SA_SIGINFO;
     if (sigaction(SIGUSR1, &sig, NULL) == -1)
-        printf("%s\n", "sigaction error");
+        ft_printf("%s\n", "sigaction error");
     if (sigaction(SIGUSR2, &sig, NULL) == -1)
-        printf("%s\n", "sigaction error");
+        ft_printf("%s\n", "sigaction error");
     while (1)
         pause();
 }
